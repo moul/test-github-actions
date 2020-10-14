@@ -1,11 +1,13 @@
 name: Docker
 on:
   push:
-    branch: master
-    tags: ['v*']
+    tags:
+      - '**'
   pull_request:
   release:
-    types: [published,released]
+    types:
+      - published
+      - released
 
 jobs:
   multi:
