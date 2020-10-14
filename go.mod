@@ -1,4 +1,4 @@
-module moul.io/golang-repo-template
+module moul.io/test-github-actions
 
 go 1.13
 
