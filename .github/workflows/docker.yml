@@ -1,8 +1,6 @@
 name: Docker
 on:
   push:
-    tags:
-      - '**'
   pull_request:
   release:
     types:
@@ -24,7 +22,7 @@ jobs:
 
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
-        if: github.event_name == 'release' || github.event_name == 'push'
+        if: github.event_name == 'release' || contains(github.ref, "ref/head/v*")
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
@@ -34,7 +32,7 @@ jobs:
 
       - name: Check Docker Hub Credentials
         id: check_dockerhub_credentials
-        if: github.event_name == 'release' || github.event_name == 'push'
+        if: github.event_name == 'release' || contains(github.ref, "ref/head/v*")
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -52,7 +50,7 @@ jobs:
 
       - name: Push to Docker Hub
         if: |
-          (github.event_name == 'release' || github.event_name == 'push') &&
+          (github.event_name == 'release' || contains(github.ref, "ref/head/v*")) &&
           contains(steps.check_dockerhub_credentials.outputs.missingsecrets, 'no')
         uses: docker/build-push-action@v1
         with:
